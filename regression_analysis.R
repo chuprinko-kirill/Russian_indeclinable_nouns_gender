@@ -1,3 +1,4 @@
+setwd("C:/Users/Kirill/Desktop")
 library(tidyverse)
 library(readxl)
 library(lme4)
@@ -68,14 +69,27 @@ full_data_multisyl %>% group_by(gender, stress)  %>% count(.)
 ###
 
 ### Regression analysis ###
-# for convenience models' outputs will be written down in a new .txt file
 sink ("indeclinable_nouns_corpus_data_regressions.txt")
 print ("by semantic predictors")
-
-model_by_sem= glmer(gender ~ sem_gender + (1|Meaning) , Full_data_sure, family="binomial",
+print ("MASC")
+m_by_sem= glmer(masc ~ sem_gender + (1|Meaning) , Full_data_sure, family="binomial",
                  control=glmerControl(optimizer="bobyqa", optCtrl=list(maxfun=100000)))
-summary(model_by_sem)
-summary(glht(model_by_sem, linfct = mcp(sem_gender= "Tukey")), test = adjusted("holm"))
+summary(m_by_sem)
+summary(glht(m_by_sem, linfct = mcp(sem_gender= "Tukey")), test = adjusted("holm"))
+
+
+print ("FEM")
+f_by_final= glmer( fem ~ sem_gender + (1|Meaning) , Full_data_sure, family="binomial",
+                   control=glmerControl(optimizer="bobyqa", optCtrl=list(maxfun=100000)))
+summary(f_by_final)
+summary(glht(f_by_final, linfct = mcp(sem_gender= "Tukey")), test = adjusted("holm"))
+
+print ("NEUT")
+n_by_final= glmer( neut ~ sem_gender + (1|Meaning) , Full_data_sure, family="binomial",
+                   control=glmerControl(optimizer="bobyqa", optCtrl=list(maxfun=100000)))
+summary(n_by_final)
+summary(glht(n_by_final, linfct = mcp(sem_gender= "Tukey")), test = adjusted("holm"))
+
 
 print ("by final")
 print ("MASC")
